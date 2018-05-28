@@ -1,0 +1,29 @@
+{
+  "name": "angular-glue",
+  "private": true,
+  "version": "1.5.0",
+  "description": "Angular servies for communicating to IGlue",
+  "repository": "https://github.com/bluntsoftware/angular-iglue",
+  "license": "MIT",
+  "devDependencies": {
+    "bower": "^1.7.7",
+    "http-server": "^0.9.0",
+    "uglify-js": "^3.3.26"
+  },
+  "scripts": {
+    "postinstall": "bower install && npm install uglify-js -g",
+    "update-deps": "npm update",
+    "postupdate-deps": "bower update",
+    "prestart": "npm install",
+    "start": "http-server -a localhost -p 8000 -c-1 ./lib",
+    "pretest": "npm install",
+    "preupdate-webdriver": "npm install",
+    "update-webdriver": "webdriver-manager update",
+    "clean:dist": "if exist dist (rd /s /q dist)",
+    "clean": "npm run clean:dist",
+    "mkdir:dist": "if not exist dist (mkdir dist)",
+    "build:copy": "type lib\\iglue\\env\\*.js lib\\iglue\\app\\*.js lib\\iglue\\auth\\*.js lib\\iglue\\glue\\*.js lib\\iglue\\conduit\\*.js lib\\iglue\\util\\*.js > dist/iglue.js",
+    "build:minify": "uglifyjs dist/iglue.js -o dist/iglue.min.js -c",
+    "build": "npm run clean && npm run mkdir:dist && npm run build:copy -s && npm run build:minify -s"
+  }
+}

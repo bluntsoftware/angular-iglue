@@ -1,0 +1,14 @@
+{
+  "name": "angular-conduit",
+  "description": "Api for IGlue Conduit",
+  "version": "1.5.1",
+  "homepage": "https://github.com/bluntsoftware/angular-conduit",
+  "license": "MIT",
+  "private": false,
+  "_release": "1.5.1",
+
+  "dependencies": {
+    "angular": "~1.4.8",
+    "angular-resource": "~1.4.8"
+  }
+}

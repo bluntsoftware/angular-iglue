@@ -1,0 +1,9 @@
+logs/*
+!.gitkeep
+node_modules/
+lib/bower_components/
+tmp
+.DS_Store
+.idea
+*.iml
+package-lock.json
