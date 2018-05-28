@@ -24,6 +24,8 @@
     "mkdir:dist": "if not exist dist (mkdir dist)",
     "build:copy": "type lib\\iglue\\env\\*.js lib\\iglue\\app\\*.js lib\\iglue\\auth\\*.js lib\\iglue\\glue\\*.js lib\\iglue\\conduit\\*.js lib\\iglue\\util\\*.js > dist/iglue.js",
     "build:minify": "uglifyjs dist/iglue.js -o dist/iglue.min.js -c",
-    "build": "npm run clean && npm run mkdir:dist && npm run build:copy -s && npm run build:minify -s"
+    "build": "npm run clean && npm run mkdir:dist && npm run build:copy -s && npm run build:minify -s",
+    "version": "npm run build && git add -A dist",
+    "postversion": "git push && git push --tags"
   }
 }
