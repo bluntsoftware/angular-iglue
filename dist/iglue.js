@@ -105,7 +105,40 @@ iglue_mod.factory('Session', function () {
 
 iglue_mod.factory('$auth', ['$iglue','$http','$rootScope','authService','Session','__env',function ($iglue,$http,$rootScope,authService,Session, __env) {
     return  {
+        createSession:function(){
+            $iglue.user().account(function(data) {
+                Session.create(data.landingPage,data.login, data.firstName, data.lastName, data.email, data.roles,data.imgSrc);
+                $rootScope.account = Session;
+                $rootScope.authenticated = true;
+                authService.loginConfirmed(data);
+            });
+        },
+        encode:function(postLoginRedirect){
+            if(postLoginRedirect){
+                return '&redirect=' + encodeURIComponent(postLoginRedirect);
+            }
+            if(__env.social_post_login_url ){
+                return '&redirect=' + encodeURIComponent(__env.social_post_login_url);
+            }
+            return '&redirect=' + encodeURIComponent(window.location.protocol.concat("//").concat(window.location.host));
+        },
+        loginFacebook:function (postLoginRedirect) {
+            window.location = __env.base_url + 'user_manager/sociallogin/facebook?scope=email' + this.encode(postLoginRedirect);
+        },
+        loginLinkedIn:function (postLoginRedirect) {
+            window.location = __env.base_url + 'user_manager/sociallogin/linkedin' + this.encode(postLoginRedirect);
+        },
+        loginGoogle:function (postLoginRedirect) {
+            window.location = __env.base_url + 'user_manager/sociallogin/google?scope=email' + this.encode(postLoginRedirect);
+        },
+        loginGithub:function (postLoginRedirect) {
+            window.location = __env.base_url + 'user_manager/sociallogin/github' + this.encode(postLoginRedirect);
+        },
+        loginTwitter:function (postLoginRedirect) {
+            window.location = __env.base_url + 'user_manager/sociallogin/twitter' + this.encode(postLoginRedirect);
+        },
         login:function(login,password,remember_me){
+            var self = this;
             if(!remember_me){
                 remember_me = true;
             }
@@ -118,18 +151,63 @@ iglue_mod.factory('$auth', ['$iglue','$http','$rootScope','authService','Session
                 ignoreAuthModule: 'ignoreAuthModule',
                 withCredentials : true
             }).success(function (data, status, headers, config) {
-                $iglue.user().account(function(data) {
-                    Session.create(data.landingPage,data.login, data.firstName, data.lastName, data.email, data.roles,data.imgSrc);
-                    $rootScope.account = Session;
-                    $rootScope.authenticated = true;
-                    authService.loginConfirmed(data);
-                });
+                self.createSession();
             }).error(function (data, status, headers, config) {
                 $rootScope.authenticationError = true;
                 $rootScope.authenticated = false;
                 $rootScope.account = null;
                 Session.invalidate();
             });
+        },
+        isAdmin:function(){
+           return $rootScope.hasRole('ROLE_ADMIN');
+        },
+        hasRole:function(role){
+            if($rootScope.account){
+                return $rootScope.account.userRoles.indexOf(role) !== -1;
+            }
+            return false;
+        },
+        valid: function (authorizedRoles) {
+            if (!authorizedRoles) {
+                return true;
+            }
+            if (!Session.login) {
+                $iglue.user().account(function(data) {
+                    Session.create(data.landingPage,data.login, data.firstName, data.lastName, data.email, data.roles,data.imgSrc);
+                    $rootScope.account = Session;
+                    if (!$rootScope.isAuthorized(authorizedRoles)) {
+                        event.preventDefault();
+                        $rootScope.$broadcast("event:auth-notAuthorized");
+                    }
+                    $rootScope.authenticated = true;
+                });
+            }else{
+                if (!$rootScope.isAuthorized(authorizedRoles)) {
+                    event.preventDefault();
+                    // user is not allowed
+                    $rootScope.$broadcast("event:auth-notAuthorized");
+                }
+            }
+            $rootScope.authenticated = !!Session.login;
+        },
+        isAuthorized: function (authorizedRoles) {
+            if (!angular.isArray(authorizedRoles)) {
+                if (authorizedRoles === '*') {
+                    return true;
+                }
+                authorizedRoles = [authorizedRoles];
+            }
+            var isAuthorized = false;
+            angular.forEach(authorizedRoles, function(authorizedRole) {
+                var authorized = (!!Session.login &&
+                    Session.userRoles.indexOf(authorizedRole) !== -1);
+
+                if (authorized || authorizedRole === '*') {
+                    isAuthorized = true;
+                }
+            });
+            return isAuthorized;
         },
         logout: function () {
             $http.get(__env.base_url + 'app/logout').success(function (data, status, headers, config) {
