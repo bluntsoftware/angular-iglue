@@ -1,10 +1,13 @@
 logs/*
 !.gitkeep
 node_modules/
-lib/
+lib/*.*
+lib/example/
 lib/bower_components/
 tmp
 .DS_Store
 .idea
+.gitignore
+.bowerrc
 *.iml
 package-lock.json
