@@ -294,22 +294,17 @@ iglue_mod.factory('$conduit', ['$resource','$window','$q','__env',function ($res
             }
             return {
                 upload:function(fd){
-                    var deferred = $q.defer();
-                    $resource(endpoint,{}, {
-                        'upload': {
-                            method: 'POST',
-                            url: endpoint + '/upload',
-                            transformRequest: function  (data) {
-                                return data;
-                            },
-                            headers: {'Content-Type': undefined, enctype: 'multipart/form-data'}
-                        }
-                    }).upload(fd).$promise.then(function (res) {
-                        deferred.resolve(res);
-                    }).catch(function (err) {
-                        deferred.error(err);
-                    });
-                    return deferred.promise;
+                     var res = $resource(endpoint,{}, {
+                         'upload': {
+                             method: 'POST',
+                             url: endpoint + '/upload',
+                             transformRequest: function  (data) {
+                                 return data;
+                             },
+                             headers: {'Content-Type': undefined, enctype: 'multipart/form-data'}
+                         }
+                     });
+                    return res.upload(fd).$promise;
                 },
                 get:function (params) {
                     if(!params){
