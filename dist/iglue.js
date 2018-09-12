@@ -43,12 +43,24 @@ iglue_mod.factory('PaymentGlue', ['$resource','__env',
             'mysubscriptions':{method: 'GET',isArray: false,url:__env.base_url + 'payment' + '/my_subscriptions'},
             'mytransactions':{method: 'GET',isArray: false,url:__env.base_url + 'payment' + '/my_transactions'},
             'subscriptions':{method: 'GET',isArray: false,url:__env.base_url + 'payment' + '/subscriptions'},
-            'cancel_subscription':{method: 'GET',params:{subscriptionId:'@subscriptionId'},isArray: false,url:__env.base_url + 'payment' + '/cancel_subscription'}
+            'cancel_subscription':{method: 'GET',params:{subscriptionId:'@subscriptionId'},isArray: false,url:__env.base_url + 'payment' + '/cancel_subscription'},
+            'query':{method:'GET',
+                transformResponse:function(data,headers){
+                    return JSON.parse(data);
+                }
+            },
+            'get':{method:'GET'}
         });
     }]);iglue_mod.factory('RoleGlue', ['$resource','__env',
     function ($resource,__env) {
         var user_manager_base_url = __env.base_url + 'user_manager/';
         return $resource(user_manager_base_url + 'applicationAuthority', {}, {
+            'query':{method:'GET',
+                transformResponse:function(data,headers){
+                    return JSON.parse(data);
+                }
+            },
+            'get':{method:'GET'}
 
         });
 }]);
@@ -81,7 +93,14 @@ iglue_mod.factory('UserGlue', ['$resource','__env',
             'resetPassword':{method: 'GET',isArray: false,url:user_manager_base_url + 'resetPassword'},
             //Admin Services
             'changePassword':{method: 'GET',isArray: false,url:user_manager_base_url + 'changePassword'},
-            'activate':{method: 'GET',isArray: false,url:user_manager_base_url + 'activate'}
+            'activate':{method: 'GET',isArray: false,url:user_manager_base_url + 'activate'},
+            'query':{method:'GET',
+                transformResponse:function(data,headers){
+                    return JSON.parse(data);
+                }
+            },
+            'get':{method:'GET'}
+
         });
     }]);
 /*
