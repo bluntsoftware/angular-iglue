@@ -45,7 +45,13 @@ iglue_mod.factory('PaymentGlue', ['$resource','__env',
             'subscriptions':{method: 'GET',isArray: false,url:__env.base_url + 'payment' + '/subscriptions'},
             'cancel_subscription':{method: 'GET',params:{subscriptionId:'@subscriptionId'},isArray: false,url:__env.base_url + 'payment' + '/cancel_subscription'}
         });
-    }]);
+    }]);iglue_mod.factory('RoleGlue', ['$resource','__env',
+    function ($resource,__env) {
+        var user_manager_base_url = __env.base_url + 'user_manager/';
+        return $resource(user_manager_base_url + 'applicationAuthority', {}, {
+
+        });
+}]);
 /*
     Subscription Plan Services
  */
@@ -224,7 +230,7 @@ iglue_mod.factory('$auth', ['$iglue','$http','$rootScope','authService','Session
 /*
     IGlue Services
  */
-iglue_mod.factory('$iglue', ['AppGlue','UserGlue', function (AppGlue,UserGlue) {
+iglue_mod.factory('$iglue', ['AppGlue','UserGlue', function (AppGlue,UserGlue,RoleGlue) {
 
     return {
         app: function () {
@@ -232,6 +238,9 @@ iglue_mod.factory('$iglue', ['AppGlue','UserGlue', function (AppGlue,UserGlue) {
         },
         user:function(){
             return UserGlue;
+        },
+        role:function(){
+            return RoleGlue;
         }
     }
 }]);
