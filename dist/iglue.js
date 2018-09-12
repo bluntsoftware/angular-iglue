@@ -36,7 +36,7 @@ iglue_mod.factory('AppGlue', ['$resource','__env',
  */
 iglue_mod.factory('PaymentGlue', ['$resource','__env',
     function ($resource,__env) {
-        return $resource(__env.base_url + 'payment', {}, {
+        return $resource(__env.base_url + 'payment/' + ':id', {}, {
             'client_token': { method: 'POST', params: {}, isArray: false,url:__env.base_url + 'payment' + '/client_token'},
             'checkout':{method: 'POST',params: {},isArray: false,url:__env.base_url + 'payment' + '/checkout'},
             'subscribe':{method: 'POST',isArray: false,url:__env.base_url + 'payment' + '/subscribe'},
@@ -54,7 +54,7 @@ iglue_mod.factory('PaymentGlue', ['$resource','__env',
     }]);iglue_mod.factory('RoleGlue', ['$resource','__env',
     function ($resource,__env) {
         var user_manager_base_url = __env.base_url + 'user_manager/';
-        return $resource(user_manager_base_url + 'applicationAuthority', {}, {
+        return $resource(user_manager_base_url + 'applicationAuthority/'+':id', {}, {
             'query':{method:'GET',
                 transformResponse:function(data,headers){
                     return JSON.parse(data);
@@ -86,7 +86,7 @@ iglue_mod.factory('SubscriptionGlue', ['$resource','__env',
 iglue_mod.factory('UserGlue', ['$resource','__env',
     function ($resource,__env) {
         var user_manager_base_url = __env.base_url + 'user_manager/';
-        return $resource(user_manager_base_url + 'applicationUser', {}, {
+        return $resource(user_manager_base_url + 'applicationUser/' +':id', {}, {
             //User Services
             'account':{method: 'GET',isArray: false,url:user_manager_base_url + 'account'},
             'register':{method: 'GET',isArray: false,url:user_manager_base_url + 'register'},
