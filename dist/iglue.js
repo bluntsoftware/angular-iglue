@@ -249,10 +249,10 @@ iglue_mod.factory('$auth', ['$iglue','$http','$rootScope','authService','Session
 /*
     IGlue Services
  */
-iglue_mod.factory('$iglue', ['AppGlue','UserGlue', function (AppGlue,UserGlue,RoleGlue) {
+iglue_mod.factory('$iglue', ['AppGlue','UserGlue','RoleGlue', function (AppGlue,UserGlue,RoleGlue) {
 
     return {
-        app: function () {
+        app:function () {
             return AppGlue;
         },
         user:function(){
